@@ -12,14 +12,14 @@ import (
 //go:generate go run github.com/vektra/mockery/v2@latest --name=Service --output=../service/mocks --case=underscore
 type Service interface {
 	CreateUser(ctx context.Context, req dto.UserRequest) (int, error)
-	CreateTask(ctx context.Context, req dto.TaskRequest) (int, error)
+	CreateTask(ctx context.Context, req dto.TaskRequest) (string, error)
 	GetTaskByID(ctx context.Context, id int) (*models.Task, error)
 	GetTasks(ctx context.Context) ([]models.Task, error)
 	GetTaskByUserID(ctx context.Context, userID int) (*models.Task, error)
 	GetTasksByUserID(ctx context.Context, userID int) ([]models.Task, error)
 
 	// Переделать функцию: нужно обновлять всю таску
-	UpdateTaskStatus(ctx context.Context, id int, status string) error
+	UpdateTaskStatus(ctx context.Context, id string, status string) error
 	DeleteTask(ctx context.Context, id int) error
 }
 

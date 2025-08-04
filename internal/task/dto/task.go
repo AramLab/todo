@@ -1,24 +1,24 @@
 package dto
 
 type TaskRequestById struct {
-	ID int `json:"id" validate:"required,gt=0"`
+	ID string `json:"id" validate:"required"`
 }
 
 type TaskRequestUpdate struct {
-	ID          int    `json:"id" validate:"required,gt=0"`
+	ID          string `json:"id" validate:"required"`
 	Title       string `json:"title" validate:"omitempty,min=3,max=100"`
 	Description string `json:"description" validate:"omitempty,min=5,max=500"`
 	Status      string `json:"status" validate:"omitempty,oneof=pending in_progress completed"`
 }
 
 type TaskRequest struct {
-	UserID      int    `json:"user_id" validate:"required"`
+	UserID      string `json:"user_id" validate:"required"`
 	Title       string `json:"title" validate:"required"`
 	Description string `json:"description"`
 	Status      string `json:"status" validate:"oneof=new in_progress done"`
 }
 
 type TaskStatusUpdateRequest struct {
-	ID     int    `json:"id" validate:"required"`
+	ID     string `json:"id" validate:"required"`
 	Status string `json:"status" validate:"required,oneof=new in_progress done"`
 }

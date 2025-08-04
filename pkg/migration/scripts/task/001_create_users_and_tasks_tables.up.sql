@@ -1,13 +1,10 @@
-CREATE TABLE users (
-                       id SERIAL PRIMARY KEY,
-                       username TEXT UNIQUE NOT NULL,
-                       password TEXT NOT NULL,
-                       created_at TIMESTAMP DEFAULT now()
-);
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+DROP TABLE IF EXISTS users;
 
 CREATE TABLE tasks (
                        id SERIAL PRIMARY KEY,
-                       user_id INT REFERENCES users(id) ON DELETE CASCADE,
+                       user_id UUID NOT NULL,
                        title TEXT NOT NULL,
                        description TEXT,
                        status TEXT CHECK (status IN ('new', 'in_progress', 'done')) DEFAULT 'new',

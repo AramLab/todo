@@ -32,7 +32,7 @@ func (s *service) CreateUser(ctx context.Context, req dto.UserRequest) (int, err
 	return id, nil
 }
 
-func (s *service) CreateTask(ctx context.Context, req dto.TaskRequest) (int, error) {
+func (s *service) CreateTask(ctx context.Context, req dto.TaskRequest) (string, error) {
 	task := models.Task{
 		UserID:      req.UserID,
 		Title:       req.Title,
@@ -42,7 +42,7 @@ func (s *service) CreateTask(ctx context.Context, req dto.TaskRequest) (int, err
 	id, err := s.repo.CreateTask(ctx, task)
 	if err != nil {
 		s.log.Errorf("CreateTask: %v", err)
-		return 0, err
+		return "", err
 	}
 	return id, nil
 }
@@ -83,7 +83,7 @@ func (s *service) GetTasksByUserID(ctx context.Context, userID int) ([]models.Ta
 	return tasks, nil
 }
 
-func (s *service) UpdateTaskStatus(ctx context.Context, id int, status string) error {
+func (s *service) UpdateTaskStatus(ctx context.Context, id string, status string) error {
 	if err := s.repo.UpdateTaskStatus(ctx, id, status); err != nil {
 		s.log.Errorf("UpdateTaskStatus: %v", err)
 		return err

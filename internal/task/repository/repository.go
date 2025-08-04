@@ -28,7 +28,7 @@ type repository struct {
 
 //go:generate go run github.com/vektra/mockery/v2@latest --name=Repository --output=./mocks --case=underscore
 type Repository interface {
-	CreateTask(ctx context.Context, task models.Task) (int, error)
+	CreateTask(ctx context.Context, task models.Task) (string, error)
 	CreateUser(ctx context.Context, user models.User) (int, error)
 
 	GetTaskByID(ctx context.Context, id int) (*models.Task, error)
@@ -37,7 +37,7 @@ type Repository interface {
 	GetTasksByUserID(ctx context.Context, userID int) ([]models.Task, error)
 	GetUserByID(ctx context.Context, id int) (*models.User, error)
 
-	UpdateTaskStatus(ctx context.Context, id int, status string) error
+	UpdateTaskStatus(ctx context.Context, id string, status string) error
 	DeleteTask(ctx context.Context, id int) error
 }
 
@@ -70,11 +70,11 @@ func NewRepository(ctx context.Context, cfg config.PostgresCfg) (Repository, err
 	return &repository{pool}, nil
 }
 
-func (r *repository) CreateTask(ctx context.Context, task models.Task) (int, error) {
-	var id int
+func (r *repository) CreateTask(ctx context.Context, task models.Task) (string, error) {
+	var id string
 	err := r.pool.QueryRow(ctx, createTaskQuery, task.UserID, task.Title, task.Description, task.Status).Scan(&id)
 	if err != nil {
-		return 0, errors.Wrap(err, "failed to create task")
+		return "", errors.Wrap(err, "failed to create task")
 	}
 	return id, nil
 }
@@ -154,7 +154,7 @@ func (r *repository) GetUserByID(ctx context.Context, id int) (*models.User, err
 	return &user, nil
 }
 
-func (r *repository) UpdateTaskStatus(ctx context.Context, id int, status string) error {
+func (r *repository) UpdateTaskStatus(ctx context.Context, id string, status string) error {
 	_, err := r.pool.Exec(ctx, updateTaskStatusQuery, status, id)
 	if err != nil {
 		return errors.Wrap(err, "failed to update task status")
